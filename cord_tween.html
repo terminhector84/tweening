@@ -1,0 +1,98 @@
+<html>
+	<body>
+		<canvas id="canvas" width="800" height="600"></canvas>
+		<script>
+			var canvas = document.getElementById("canvas");
+
+var ctx = canvas.getContext("2d");
+
+var smX = 100;
+var smY = 100;
+var lgX = 50;
+var lgY = 50;
+var posX;
+var posY;
+var smdx = 1;
+var smdy = 1;
+
+canvas.addEventListener("mousemove", function(e){
+  var rect = canvas.getBoundingClientRect();
+  posX = e.clientX - rect.left - 50;
+  posY = e.clientY - rect.top - 50;
+});
+
+
+function line(x, y, x2, y2){
+	this.x = x;
+	this.y = y;
+	this.x2 = x2;
+	this.y2 = y2;
+
+  ctx.beginPath();
+  ctx.strokeStyle="white";
+  ctx.moveTo(this.x + 50, this.y + 50);
+  ctx.lineTo(this.x2 + 50, this.y2 + 50);
+  ctx.stroke();
+  ctx.closePath();
+}
+
+function Sqr(x, y){
+  this.x = x;
+  this.y = y;
+  
+  ctx.beginPath();
+  ctx.fillStyle="crimson";
+  ctx.rect(this.x, this.y, 100, 100);
+  ctx.fill();
+  ctx.closePath();
+}
+
+function draw(){
+  var small = new Sqr(smX + smdx, smY + smdy);
+  var large = new Sqr(posX, posY);
+
+  if(smX >= posX){
+  		smdx = -smdx;
+  }
+  var string = new line(smX + smdx, smY + smdy, posX, posY);
+}
+
+
+function update(){
+
+  ctx.beginPath();
+  ctx.fillStyle="#333";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fill();
+  ctx.closePath();
+
+ function linearTween(t,b,c,d) {
+  	return c * t / d + b;
+	}
+
+function updatePos(){
+  var currTime = 1000/30;
+  var startPosX = smX;
+  var startPosY = smY;
+  var changeInPosX = posX - smX;
+  var changeInPosY = posY - smY;
+  var duration = 100;
+  
+  smdx = linearTween(currTime, startPosX, changeInPosX, duration);
+  smdy = linearTween(currTime, startPosY, changeInPosY, duration);
+  
+}
+  
+  draw();
+  line();
+  updatePos();
+
+
+  requestAnimationFrame(update);
+}
+
+requestAnimationFrame(update);
+  
+		</script>
+	</body>
+</html>
